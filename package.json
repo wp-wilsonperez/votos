@@ -1,0 +1,35 @@
+{
+  "name": "votos",
+  "version": "1.0.0",
+  "description": "Creación app votos",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_PATH=. babel-node index.js --presets es2015",
+    "serve": "NODE_PATH=. babel-node index.js --presets es2015",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wp-wilsonperez/votos.git"
+  },
+  "keywords": [
+    "votos"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wp-wilsonperez/votos/issues"
+  },
+  "homepage": "https://github.com/wp-wilsonperez/votos#readme",
+  "dependencies": {
+    "babel": "^5.5.8",
+    "body-parser": "^1.14.1",
+    "cookie-parser": "^1.4.0",
+    "ejs": "^2.4.1",
+    "express": "^4.12.4",
+    "express-session": "^1.12.1",
+    "passport": "^0.2.0",
+    "passport-facebook": "^1.0.3",
+    "serve-favicon": "^2.3.0"
+  }
+}

@@ -1,0 +1,60 @@
+body{
+	background: #fafafa;
+	color:#e2bdae;
+	font-family: 'Montserrat', sans-serif;	
+
+}
+#main-container{
+	margin:30px auto;
+}
+.iphone{
+	max-width: 100%
+}
+.site-footer{
+	text-transform: uppercase;
+	font-size: 12px;
+}
+.login-box,
+.signup-box{
+	background-color: white;
+	border:1px solid #edeeee;
+	border-radius: 3px;
+	padding: 10px 0;
+	text-align: center
+}
+.signup-box .title{
+	font-family: 'Oleo Script', cursive;
+	font-size: 42px;
+}
+.signup-form{
+	width: 65%;
+	margin: 0 auto;
+}
+.signup-form h2{
+	color:#a5a7aa;
+	font-size: 1.2em;
+}
+.signup-form .btn.btn-fb{
+	background: #4090db;
+	font-size: .9em;
+}
+.signup-form .btn.btn-fb:hover{
+	background: #2d6599;
+
+}
+.signup-form .btn.btn-signup{
+	background: #125688;
+}
+.morlaquitas-list{
+	font-family: 'Oleo Script', cursive;
+	font-size: 1em;
+}
+.morlaquitas-list span{
+	font-family: 'Oleo Script', cursive;
+	color:#a5a7aa;
+	font-size: 1.5em !important;
+}
+.morlaquitas-list .btn{
+	padding: 0 1rem;
+
+}
