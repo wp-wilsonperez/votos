@@ -4,6 +4,7 @@
   "description": "Creación app votos",
   "main": "index.js",
   "scripts": {
+    "build": "browserify app.js > public/js/appbuilded.js -t babelify",
     "start": "NODE_PATH=. babel-node index.js --presets es2015",
     "serve": "NODE_PATH=. babel-node index.js --presets es2015",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,13 +24,17 @@
   "homepage": "https://github.com/wp-wilsonperez/votos#readme",
   "dependencies": {
     "babel": "^5.5.8",
+    "babelify": "^6.1.2",
     "body-parser": "^1.14.1",
+    "browserify": "^10.2.4",
     "cookie-parser": "^1.4.0",
     "ejs": "^2.4.1",
     "express": "^4.12.4",
     "express-session": "^1.12.1",
+    "mongoose": "^4.9.2",
     "passport": "^0.2.0",
     "passport-facebook": "^1.0.3",
+    "react": "^0.13.3",
     "serve-favicon": "^2.3.0"
   }
 }

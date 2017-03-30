@@ -1,0 +1,1 @@
+db.candidates.insert([{"name":"Carla Yanez Pacheco", "votes":3000, "img_main": "candidate.jpg"}, {"name":"Marta Ramirez Correa", "votes":1234, "img_main": "candidate.jpg"}, {"name":"Camila Juarez Perea", "votes":4564, "img_main": "candidate.jpg"}]);

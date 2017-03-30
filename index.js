@@ -9,6 +9,11 @@ import {Strategy as FacebookStrategy} from 'passport-facebook';
 
 import config from './app/config';
 
+import mongoose from 'mongoose';
+import Candidate from './app/models/candidate';
+
+mongoose.connect('mongodb://localhost/votes');
+
 const port = process.env.PORT || 3000;
 const app = express();
 
@@ -60,7 +65,7 @@ app.get('/auth/facebook/callback',
 	function(req, res) {
 		// Successful authentication, redirect home.
 		console.log('/auth/facebook/callback');
-		res.redirect('/candidates');
+		res.redirect('/votes');
 	}
 );
 
@@ -70,12 +75,50 @@ let server = http.createServer(app).listen(port, () => {
 });
 
 app.get('/', (req, res) => {
-   res.render('home');
+	res.render('home');
+});
+
+app.get('/votes', (req, res) => {
+	res.render('votes');
+   //res.send('Listado de candidatas');
 });
 
 app.get('/candidates', (req, res) => {
-   res.send('Listado de candidatas');
+
+	Candidate.find({}, (err, docs) => {
+      if(err) {
+         res.json();
+      }
+      if(docs) {
+         res.json(docs);
+      }else {
+         res.json({});
+      }
+   });
 });
+
+app.post('/candidate/vote', (req, res) => {
+
+	let params = {
+		_id: req.body.candidate_id
+	}
+	let update = {
+		"$inc": {"votes":1}
+	};
+	Candidate.findOneAndUpdate(params, update, function (err, resp) {
+		if(err){
+			console.log(err);
+			res.status(401).send({"save": false});
+		} else {
+			res.send({"save": true, "text": "Voto exitoso"});
+		} 
+	});
+});
+
+
+
+
+
 
 
 
