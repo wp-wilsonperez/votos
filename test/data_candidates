@@ -1,1 +1,6 @@
 db.candidates.insert([{"name":"Carla Yanez Pacheco", "votes":3000, "img_main": "candidate.jpg"}, {"name":"Marta Ramirez Correa", "votes":1234, "img_main": "candidate.jpg"}, {"name":"Camila Juarez Perea", "votes":4564, "img_main": "candidate.jpg"}]);
+
+
+db.users.insert({"name": "Daniel Dante", "lastname": "Cuevas Chayña", "username": "dante", "password": "40bd001563085fc35165329ea1ff5c5ecbdbbeef", "role": 1, "img": "user.jpg"});
+
+40bd001563085fc35165329ea1ff5c5ecbdbbeef = sha1('123');

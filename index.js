@@ -5,14 +5,18 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import expressSession from 'express-session';
 import passport from 'passport';
+import sha1 from 'sha1';
+//import passport from 'passport';
 import {Strategy as FacebookStrategy} from 'passport-facebook';
 
 import config from './app/config';
 
 import mongoose from 'mongoose';
 import Candidate from './app/models/candidate';
+import User from './app/models/user';
 
 mongoose.connect('mongodb://localhost/votes');
+import {Strategy as LocalStrategy} from 'passport-local';
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -29,13 +33,37 @@ app.use(expressSession({
 	saveUninitialized: false
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/', express.static(__dirname + '/public'));
+
 passport.serializeUser((user, done) => { done(null, user) });
 passport.deserializeUser((user, done) => { done(null, user) });
 
-app.use(passport.initialize());
-app.use(passport.session());
-app.use('/', express.static(__dirname + '/public'));
-
+let localStrategy = new LocalStrategy( (username, password, done) => {
+	console.log(sha1(password));
+   User.findOne({username: username, password: sha1(password)}, (err, docs) => {
+      if(err) {
+         done(null, false, {
+            message: 'Error'
+         });
+      }
+      if(docs) {
+         return done(null, {
+            _id: docs._id,
+            username: docs.username,
+            username: docs.username,
+            role: docs.role
+         });
+      }else {
+         done(null, false, {
+            message: 'Unkown user'
+         });
+      }      
+   });
+   
+});
 
 passport.use(new FacebookStrategy({
     clientID: config.face.clientID,
@@ -53,6 +81,8 @@ passport.use(new FacebookStrategy({
 	});
   }
 ));
+
+passport.use(localStrategy);
 
 app.get('/auth/facebook',
 	passport.authenticate('facebook')
@@ -113,6 +143,41 @@ app.post('/candidate/vote', (req, res) => {
 			res.send({"save": true, "text": "Voto exitoso"});
 		} 
 	});
+});
+
+app.get('/login', (req, res) => {
+
+	res.render('admin/login');
+});
+
+ app.post('/login', (req, res, next) => {
+   passport.authenticate('local', (err, user) => {
+      switch (req.accepts('html', 'json')) {
+         case 'html':
+            if (err) { return next(err); }
+            if (!user) { return res.redirect('/login'); }
+            req.logIn(user, function(err) {
+            if (err) { return next(err); }
+               return res.redirect('/admin');
+            });
+            break;
+         case 'json':
+            if (err)  { return next(err); }
+            if (!user) { return res.status(401).send({"login": false}); }
+            req.logIn(user, function(err) {
+            if (err) { return res.status(401).send({"login": false}); }
+               return res.send({"login": true, "username": user.username});
+            });
+            break;
+         default:
+            res.status(406).send();
+      }
+   })(req, res, next);
+});
+
+app.get('/admin', (req, res) => {
+	//res.send('LOGIN EXITOSO');
+	res.render('admin/admin');
 });
 
 
