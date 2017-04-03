@@ -1,4 +1,4 @@
-db.candidates.insert([{"name":"Carla Yanez Pacheco", "votes":3000, "img_main": "candidate.jpg"}, {"name":"Marta Ramirez Correa", "votes":1234, "img_main": "candidate.jpg"}, {"name":"Camila Juarez Perea", "votes":4564, "img_main": "candidate.jpg"}]);
+db.candidates.insert([{"name":"Carla", "lastname":"Yanez Pacheco", "document":"222222222", "birthdate": "2002-01-28", "votes":3000, "img_main": "candidate.jpg"}, {"name":"Marta", "lastname":"Ramirez Correa", "document":"222222223", "votes":1234, "birthdate": "2002-01-28", "img_main": "candidate.jpg"}, {"name":"Camila", "lastname":"Juarez Perea", "document":"222222224", "birthdate": "2002-01-28", "votes":4564, "img_main": "candidate.jpg"}]);
 
 
 db.users.insert({"name": "Daniel Dante", "lastname": "Cuevas Chayña", "username": "dante", "password": "40bd001563085fc35165329ea1ff5c5ecbdbbeef", "role": 1, "img": "user.jpg"});

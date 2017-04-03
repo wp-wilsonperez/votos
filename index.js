@@ -127,6 +127,64 @@ app.get('/candidates', (req, res) => {
    });
 });
 
+app.post('/candidate', (req, res) => {
+
+   let candidate = new Candidate({
+      name: req.body.name,
+      lastname: req.body.lastname,
+      document: req.body.document,
+      birthdate: "1990-10-10",
+      votes: req.body.votes,
+      img_main: req.body.img_main
+   });
+   candidate.save((err, resp) => {
+      if(err){
+         console.log(err);
+         res.status(401).send({"save": false});
+      } else {
+         console.log(candidate);   
+         res.send({"save": true});
+      }            
+   });
+});
+
+
+app.get('/users', (req, res) => {
+
+   User.find({}, (err, docs) => {
+      if(err) {
+         res.json();
+      }
+      if(docs) {
+         res.json(docs);
+      }else {
+         res.json({});
+      }
+   });
+});
+
+app.post('/user', (req, res) => {
+
+   let user = new User({
+      name: req.body.name,
+      lastname: req.body.lastname,
+      username: req.body.username,
+      password: req.body.password,
+      role: req.body.role,
+      img: "user.jpg"
+   });
+   user.save((err, resp) => {
+      if(err){
+         console.log(err);
+         res.status(401).send({"save": false});
+      } else {
+         console.log(user);   
+         res.send({"save": true});
+      }            
+   });
+});
+
+
 app.post('/candidate/vote', (req, res) => {
 
 	let params = {
@@ -175,7 +233,7 @@ app.get('/login', (req, res) => {
    })(req, res, next);
 });
 
-app.get('/admin', (req, res) => {
+app.get('/admin/', (req, res) => {
 	//res.send('LOGIN EXITOSO');
 	res.render('admin/admin');
 });

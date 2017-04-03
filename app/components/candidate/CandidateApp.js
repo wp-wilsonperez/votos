@@ -6,7 +6,7 @@ class CandidateApp extends React.Component {
       this.state = {candidates: [], candidateState: false, share: false};
    }
    componentWillMount() {
-      if(!this.state.noteState) {
+      if(!this.state.candidateState) {
          $.get('/candidates', (candidates) => {
             this.setState({candidates: candidates, candidateState: true});
          });

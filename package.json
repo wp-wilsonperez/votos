@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "browserify app.js > public/js/appbuilded.js -t babelify",
+    "buildadmin": "browserify appadmin.js > public/js/appbuildedadmin.js -t babelify",
     "start": "NODE_PATH=. babel-node index.js --presets es2015",
     "serve": "NODE_PATH=. babel-node index.js --presets es2015",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -36,6 +37,8 @@
     "passport-facebook": "^1.0.3",
     "passport-local": "^1.0.0",
     "react": "^0.13.3",
+    "react-router": "^0.13.3",
+    "react-select": "^1.0.0-rc.3",
     "serve-favicon": "^2.3.0",
     "sha1": "^1.1.1"
   }

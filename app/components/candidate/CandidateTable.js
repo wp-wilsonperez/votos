@@ -35,7 +35,7 @@ class CandidateTable extends React.Component {
                  <a className="gallery-cover gray ">                
                     <img className="responsive-img" src={img} alt="Carla Camila" />              </a>
                  <div className="gallery-header">
-                   <span><b>{candidate.name} </b> <br/> Ver más ... </span>
+                   <span><b>{candidate.name} {candidate.lastname} </b> <br/> Ver más ... </span>
                  </div>
                </div>
                <div className="row row-candidata">
