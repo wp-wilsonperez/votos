@@ -91,9 +91,9 @@ class UserNew extends React.Component {
                             </div>
                             <div className="row">
                                 <div className="col s12">
-                                  
-                                  <DropDown data={this.state.options} Selected={this.state.value} id="role"></DropDown>
-                                        
+
+                                  <DropDown data={this.state.options} Selected={this.state.value} id="role" className="role"></DropDown>
+
                                 </div>
                             </div>
                             <div className="row">
