@@ -109,12 +109,12 @@ app.get('/', (req, res) => {
 	res.render('home');
 });
 
-app.get('/votes', ensureAuth, (req, res) => {
+app.get('/votes', authSocial, (req, res) => {
 	res.render('votes');
    //res.send('Listado de candidatas');
 });
 
-app.post('/vote', ensureAuth, (req, res) => {
+app.post('/vote', authLocal, (req, res) => {
    let $vote= req.body.vote;
    let $points = [0,0,0,0]
    let params = {
@@ -149,7 +149,7 @@ app.post('/vote', ensureAuth, (req, res) => {
    });
 });
 
-app.get('/voteresult', ensureAuth, (req, res) => {
+app.get('/voteresult', authLocal, (req, res) => {
    
    let match = {
       kind: { $ne: null },
@@ -214,7 +214,7 @@ app.get('/voteresult', ensureAuth, (req, res) => {
    });
 });
 
-app.get('/candidates', ensureAuth, (req, res) => {
+app.get('/candidates', authLocal, (req, res) => {
 
 	Candidate.find({}, (err, docs) => {
       if(err) {
@@ -249,7 +249,7 @@ app.get('/candidates', ensureAuth, (req, res) => {
    });
 });
 
-app.get('/candidatesTotal', ensureAuth, (req, res) => {
+app.get('/candidatesTotal', authLocal, (req, res) => {
 
    Candidate.count({}, (err, docs) => {
       if(err) {
@@ -263,7 +263,7 @@ app.get('/candidatesTotal', ensureAuth, (req, res) => {
    });
 });
 
-app.post('/candidate', ensureAuth, (req, res) => {
+app.post('/candidate', authLocal, (req, res) => {
 
    let candidate = new Candidate({
       name: req.body.name,
@@ -285,7 +285,7 @@ app.post('/candidate', ensureAuth, (req, res) => {
 });
 
 
-app.get('/users', ensureAuth, (req, res) => {
+app.get('/users', authLocal, (req, res) => {
 
    User.find({}, (err, docs) => {
       if(err) {
@@ -299,7 +299,7 @@ app.get('/users', ensureAuth, (req, res) => {
    });
 });
 
-app.post('/user', ensureAuth, (req, res) => {
+app.post('/user', authLocal, (req, res) => {
 
    let user = new User({
       name: req.body.name,
@@ -321,7 +321,7 @@ app.post('/user', ensureAuth, (req, res) => {
 });
 
 
-app.post('/candidate/vote', ensureAuth, (req, res) => {
+app.post('/candidate/vote', authSocial, (req, res) => {
 
 	let params = {
 		_id: req.body.candidate_id
@@ -374,21 +374,31 @@ app.get('/logout', (req, res) => {
   res.redirect('/login')
 });
 
-app.get('/admin', ensureAuth, (req, res) => {
+app.get('/admin', authLocal, (req, res) => {
 	//res.send('LOGIN EXITOSO');
 
 	res.render('admin/admin', {user: req.user});
 });
 
 //middleware authenticate
-function ensureAuth(req, res, next) {
+function authLocal(req, res, next) {
    if(req.isAuthenticated()) {
       console.log("LOGIN YES");
       return next();
    }
    console.log("LOGIN NO");
    //return next();
-   return res.status(401).send({"login": false});
+   return res.status(401).send({"login": false, "msg": "No ha inciado sesion con su usuario"});
+   //res.redirect('/login');
+}
+function authSocial(req, res, next) {
+   if(req.isAuthenticated()) {
+      console.log("LOGIN YES");
+      return next();
+   }
+   console.log("LOGIN NO");
+   //return next();
+   return res.status(401).send({"login": false, "msg": "No ha iniciado sesion con su Facebook"});
    //res.redirect('/login');
 }
 
