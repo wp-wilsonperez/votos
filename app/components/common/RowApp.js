@@ -15,14 +15,22 @@ class RowApp extends React.Component {
         </div>
       }
       else {
-        console.log(this.props.data);
         return <div>
         {
           this.props.data.map((data) => {
             return <tr>
               {
                 this.props.fields.map((field) => {
-                  return <td>{data[field.field]}</td>
+                  let $index = field.field;
+                  let $data = data[$index];
+                  if(field.field2){
+                    $data = $data[field.field2];
+                  }
+                  if(field.mix){
+                    $data = data[field.mix[0]] +' '+ data[field.mix[1]];
+                    
+                  }
+                  return <td>{$data}</td>
                 })
               }
             </tr>

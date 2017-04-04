@@ -8,6 +8,7 @@ class CandidateApp extends React.Component {
    componentWillMount() {
       if(!this.state.candidateState) {
          $.get('/candidates', (candidates) => {
+            console.log(candidates);
             this.setState({candidates: candidates, candidateState: true});
          });
       }      

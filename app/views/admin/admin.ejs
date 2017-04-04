@@ -83,7 +83,7 @@
                             </a>
                         </section>
                         <div class="header-title col s12 m12">      
-                            <a href="./"><span class="chapter-title">Morlaquita 2017</span></a>
+                            <a href="#"><span class="chapter-title">Morlaquita 2017</span></a>
                         </div>                        
                     </div>
                 </nav>
@@ -96,20 +96,20 @@
                         </div>
                         <div class="sidebar-profile-info">
                             <a href="javascript:void(0);" class="account-settings-link">
-                                <p>Daniel Dante</p>
-                                <span>2222222222<i class="material-icons right">arrow_drop_down</i></span>
+                                <p><%=user.username%></p>
+                                <span><%=user.role%><i class="material-icons right">arrow_drop_down</i></span>
                             </a>
                         </div>
                     </div>
                     <div class="sidebar-account-settings">
                         <ul>
                             <li class="no-padding">
-                                <a href="modulos/mod_login/controller/logout.php" class="waves-effect waves-grey"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a>
+                                <a href="/logout" class="waves-effect waves-grey"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a>
                             </li>
                         </ul>
                     </div>
                 <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
-                    <li class="no-padding active"><a class="waves-effect waves-grey active" href="./"><i class="material-icons">settings_input_svideo</i>Inicio</a></li>
+                    <li class="no-padding active"><a class="waves-effect waves-grey active" href="#home"><i class="material-icons">settings_input_svideo</i>Inicio</a></li>
                     
                     
                     <li class="no-padding">
@@ -131,30 +131,30 @@
                         </div>
                     </li>
                                         <li class="no-padding  ">
-                                                <a class="collapsible-header waves-effect waves-grey " href="./?resultado-opening=2"><i class="material-icons">visibility</i>Opening</a>
+                                                <a class="collapsible-header waves-effect waves-grey " href="#opening"><i class="material-icons">visibility</i>Opening</a>
                                             </li>
                     <li class="no-padding ">
-                                                <a class="collapsible-header waves-effect waves-grey " href="./?resultado-casual=2"><i class="material-icons">person_pin</i>Casual</a>
+                                                <a class="collapsible-header waves-effect waves-grey " href="#casual"><i class="material-icons">person_pin</i>Casual</a>
                                             </li>
                     <li class="no-padding ">
-                                                    <a class="collapsible-header waves-effect waves-grey " href="./?gala=1"><i class="material-icons">turned_in</i>Gala</a>
+                                                <a class="collapsible-header waves-effect waves-grey " href="#gala"><i class="material-icons">turned_in</i>Gala</a>
                                             </li>
                     <li class="no-padding ">
-                                                    <a class="collapsible-header waves-effect waves-grey " href="./?resultado-pregunta=2"><i class="material-icons">speaker_notes</i>Pregunta</a>
+                                                <a class="collapsible-header waves-effect waves-grey " href="#question"><i class="material-icons">speaker_notes</i>Pregunta</a>
                                             </li>
                                         <li class="no-padding">
-                        <a class="collapsible-header waves-effect waves-grey" href="./?publico=1"><i class="material-icons">phonelink_setup</i>Público</a>
+                        <a class="collapsible-header waves-effect waves-grey" href="#question"><i class="material-icons">phonelink_setup</i>Público</a>
                     </li>                    
                     <li class="no-padding">
                         <a class="collapsible-header waves-effect waves-grey"><i class="material-icons">grid_on</i>Resultados<i class="nav-drop-icon material-icons">keyboard_arrow_right</i></a>
                         <div class="collapsible-body">
                             <ul>
-                                <li><a href="./?resultado-opening=1">Resultados Opening</a></li>
-                                <li><a href="./?resultado-casual=1">Resultados Casual</a></li>
-                                <li><a href="./?resultado-gala=1">Resultado Gala</a></li>
-                                <li><a href="./?resultado-pregunta=1">Resultado Pregunta</a></li>
-                                 <li><a href="./?resultado-publico=1">Resultado Público</a></li>
-                                <li><a href="./?resultado-globales=1">Resultados Globales</a></li>                                
+                                <li><a href="#result-opening">Resultados Opening</a></li>
+                                <li><a href="#result-casual">Resultados Casual</a></li>
+                                <li><a href="#result-gala">Resultado Gala</a></li>
+                                <li><a href="#result-question">Resultado Pregunta</a></li>
+                                <li><a href="#result-public">Resultado Público</a></li>
+                                <li><a href="#result-global">Resultados Globales</a></li>                                
                             </ul>
                         </div>
                     </li>

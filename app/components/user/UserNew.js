@@ -91,9 +91,18 @@ class UserNew extends React.Component {
                             </div>
                             <div className="row">
                                 <div className="col s12">
-
-                                  <DropDown data={this.state.options} Selected={this.state.value} id="role" className="role"></DropDown>
-
+                                  <div className="select-wrapper initialized" >
+                                    <span className="caret">▼</span>
+                                    <input type="text" className="select-dropdown" readonly="true" data-activates="select-options-d52fce94-f499-7c54-0e0e-3832b38d2463" value="Administrador" />
+                                    <ul id="select-options-d52fce94-f499-7c54-0e0e-3832b38d2463" className="dropdown-content select-dropdown ">
+                                    <li className=""><span>Administrador</span></li>
+                                    <li className=""><span>Juece</span></li>
+                                    </ul>
+                                    <select id="role" className="initialized">
+                                    <option value="1">Administrador</option>
+                                    <option value="2">Juece</option>
+                                    </select>
+                                  </div>
                                 </div>
                             </div>
                             <div className="row">

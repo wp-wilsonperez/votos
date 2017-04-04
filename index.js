@@ -14,6 +14,7 @@ import config from './app/config';
 import mongoose from 'mongoose';
 import Candidate from './app/models/candidate';
 import User from './app/models/user';
+import Vote from './app/models/vote';
 
 mongoose.connect('mongodb://localhost/votes');
 import {Strategy as LocalStrategy} from 'passport-local';
@@ -108,14 +109,149 @@ app.get('/', (req, res) => {
 	res.render('home');
 });
 
-app.get('/votes', (req, res) => {
+app.get('/votes', ensureAuth, (req, res) => {
 	res.render('votes');
    //res.send('Listado de candidatas');
 });
 
-app.get('/candidates', (req, res) => {
+app.post('/vote', ensureAuth, (req, res) => {
+   let $vote= req.body.vote;
+   let $points = [0,0,0,0]
+   let params = {
+      _id: $vote.candidate_id
+   }
+   let $votes = [];
+   $vote.forEach(function(item) {
+      $points[parseInt(item.kind)] = parseFloat(item.points);
+      $votes.push({
+         candidate_id: item.candidate_id,
+         fullname: item.fullname,
+         pointsO: $points[0],
+         pointsC: $points[1],
+         pointsG: $points[2],
+         pointsQ: $points[3],
+         kind: parseInt(item.kind)
+      });
+   });
+   
+   let vote = new Vote({
+      user_id: req.user._id,
+      votes: $votes
+   });
+   vote.save((err, resp) => {
+      if(err){
+         console.log(err);
+         res.status(401).send({"save": false});
+      } else {
+         console.log(vote);   
+         res.send({"save": true});
+      }            
+   });
+});
+
+app.get('/voteresult', ensureAuth, (req, res) => {
+   
+   let match = {
+      kind: { $ne: null },
+      user_id: { $ne: null }
+   };
+
+   if(req.body.kindIf){
+      match.kind = req.body.kind;
+   }
+   if(req.body.userIf){
+      match.kind = req.user._id;
+   }
+
+   Vote.aggregate([
+      {"$unwind": "$votes" },
+      { "$match": { "votes.kind": match.kind, "user_id": match.user_id}},
+      { "$sort": { "votes.candidate_id": -1, "votes.kind": -1} },
+      {"$group": {
+         "_id": {
+            "candidate_id": "$votes.candidate_id", "fullname": "$votes.fullname"
+         },
+         "totalO": { "$sum": "$votes.pointsO"},
+         "totalC": { "$sum": "$votes.pointsC"},
+         "totalG": { "$sum": "$votes.pointsG"},
+         "totalQ": { "$sum": "$votes.pointsQ"}
+         }
+      }
+   ], (err, docs) => {
+      console.log(err)
+      if(err) {
+         res.json();
+      }
+      if(docs) {
+         User.count({"role": 1}, (err1, jueces) => {
+            if(err1) {
+               res.json();
+            }
+            if(jueces) {
+               docs.forEach(function(doc, index) {
+                  console.log(docs[index]);
+                  let total = {
+                     O: docs[index]["totalO"] * 10 / (jueces*10),
+                     C: docs[index]["totalC"] * 10 / (jueces*10),
+                     G: docs[index]["totalG"] * 10 / (jueces*10),
+                     Q: docs[index]["totalQ"] * 10 / (jueces*10)
+                  }
+                  docs[index]["totalOP"] = total.O + "%";
+                  docs[index]["totalCP"] = total.C + "%";
+                  docs[index]["totalGP"] = total.G + "%";
+                  docs[index]["totalQP"] = total.Q + "%";
+                  docs[index]["totalEP"] = (total.O+total.C+total.G+total.Q) + "%";
+               });
+               console.log(docs);
+               res.json({candidates: docs, users: jueces});
+            }else {
+               res.json({});
+            }
+         });
+      }else {
+         res.json({});
+      }
+   });
+});
+
+app.get('/candidates', ensureAuth, (req, res) => {
 
 	Candidate.find({}, (err, docs) => {
+      if(err) {
+         res.json();
+      }
+      if(docs) {
+         if(req.query.result){
+            User.count({"role": 1}, (err1, docs2) => {
+               if(err1) {
+                  res.json();
+               }
+               if(docs2) {
+                  let candidates = [];
+                  docs.forEach(function(doc, index) {
+                     console.log(doc);
+                     console.log("--------------");
+                     candidates[index]= doc;
+                     candidates[index]["votesP"] = 10 + "%";
+                     console.log("--------------")
+                  });
+                  res.json({candidates: candidates, users: docs2});
+               }else {
+                  res.json({});
+               }
+            });
+         } else {
+            res.json(docs);
+         }
+      }else {
+         res.json({});
+      }
+   });
+});
+
+app.get('/candidatesTotal', ensureAuth, (req, res) => {
+
+   Candidate.count({}, (err, docs) => {
       if(err) {
          res.json();
       }
@@ -127,7 +263,7 @@ app.get('/candidates', (req, res) => {
    });
 });
 
-app.post('/candidate', (req, res) => {
+app.post('/candidate', ensureAuth, (req, res) => {
 
    let candidate = new Candidate({
       name: req.body.name,
@@ -149,7 +285,7 @@ app.post('/candidate', (req, res) => {
 });
 
 
-app.get('/users', (req, res) => {
+app.get('/users', ensureAuth, (req, res) => {
 
    User.find({}, (err, docs) => {
       if(err) {
@@ -163,13 +299,13 @@ app.get('/users', (req, res) => {
    });
 });
 
-app.post('/user', (req, res) => {
+app.post('/user', ensureAuth, (req, res) => {
 
    let user = new User({
       name: req.body.name,
       lastname: req.body.lastname,
       username: req.body.username,
-      password: req.body.password,
+      password: sha1(req.body.password),
       role: req.body.role,
       img: "user.jpg"
    });
@@ -185,7 +321,7 @@ app.post('/user', (req, res) => {
 });
 
 
-app.post('/candidate/vote', (req, res) => {
+app.post('/candidate/vote', ensureAuth, (req, res) => {
 
 	let params = {
 		_id: req.body.candidate_id
@@ -216,7 +352,7 @@ app.get('/login', (req, res) => {
             if (!user) { return res.redirect('/login'); }
             req.logIn(user, function(err) {
             if (err) { return next(err); }
-               return res.redirect('/admin');
+               return res.redirect('/admin#/home');
             });
             break;
          case 'json':
@@ -233,11 +369,28 @@ app.get('/login', (req, res) => {
    })(req, res, next);
 });
 
-app.get('/admin/', (req, res) => {
-	//res.send('LOGIN EXITOSO');
-	res.render('admin/admin');
+app.get('/logout', (req, res) => {
+  req.logout()
+  res.redirect('/login')
 });
 
+app.get('/admin', ensureAuth, (req, res) => {
+	//res.send('LOGIN EXITOSO');
+
+	res.render('admin/admin', {user: req.user});
+});
+
+//middleware authenticate
+function ensureAuth(req, res, next) {
+   if(req.isAuthenticated()) {
+      console.log("LOGIN YES");
+      return next();
+   }
+   console.log("LOGIN NO");
+   //return next();
+   return res.status(401).send({"login": false});
+   //res.redirect('/login');
+}
 
 
 
