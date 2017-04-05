@@ -228,14 +228,16 @@ app.get('/candidates', authLocal, (req, res) => {
                }
                if(docs2) {
                   let candidates = [];
+                  let $total=0;
                   docs.forEach(function(doc, index) {
                      console.log(doc);
                      console.log("--------------");
                      candidates[index]= doc;
                      candidates[index]["votesP"] = 10 + "%";
                      console.log("--------------")
+                     $total += docs[index]["votes"];
                   });
-                  res.json({candidates: candidates, users: docs2});
+                  res.json({candidates: candidates,total: $total, users: docs2});
                }else {
                   res.json({});
                }

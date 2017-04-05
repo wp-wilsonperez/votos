@@ -4,7 +4,7 @@ class ResultPublic extends React.Component {
    constructor(props) {
       super(props);
       let params= {
-         title: "RESULTADO VOTACIÓN PÚBLICO 208550 VALOR MÁXIMO 10% EVENTO",
+         title: "RESULTADO VOTACIÓN PÚBLICO 0 VALOR MÁXIMO 10% EVENTO",
          fields: [
             {"title": "Candidata", "field": "name", "mix": ["name", "lastname"]},
             {"title": "Votos Candidata", "field": "votes"},
@@ -16,8 +16,13 @@ class ResultPublic extends React.Component {
    componentWillMount() {
       if(!this.state.candidateState) {
          $.get('/candidates?result=true', (data) => {
+            let params = this.state.params;
+            params.title = `RESULTADO VOTACIÓN PÚBLICO ${data.total} VALOR MÁXIMO 10% EVENTO`
+            $.each(data.candidates, function (key, val) {
+               //alert(key + val);
+            });
             console.log(data);
-            this.setState({data: data.candidates, candidateState: true, msg: "No hay datos"});
+            this.setState({data: data.candidates, params: params, candidateState: true, msg: "No hay datos"});
          });
       }      
    }

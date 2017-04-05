@@ -27,28 +27,45 @@ class CandidateVote extends React.Component {
       let $data={
          vote:[]
       };
+      let validate = true;
       $(".row input").each(function(){
          let $id = $(this).data('idcandidate');
          let $fullname = $(this).data('fullname');
-         $data.vote.push({"candidate_id": $id, "fullname": $fullname, "points": $(this).val(), "kind": $component.props.type});
+         let $points = parseFloat($(this).val());
+         $data.vote.push({"candidate_id": $id, "fullname": $fullname, "points": $points, "kind": $component.props.type});
+         console.log($points);
+         if(isNaN($points) || $points < 5 || $points > 10){
+          
+          validate = false;
+          return validate;
+        }
       });
-      console.log($data);
+      if(!validate){
+        console.log("validate last");
+        alert("Algunos campos no estan completos o no estan dentro del rango permitido");
+        //ev.stopPropagation();
+        //ev.preventDefault();
+      } else {
+        console.log($data);
 
-      $.ajax({
-         method: "POST",
-         url: '/vote',
-         dataType: "json",
-         data: $data,
-         cache: false,
-         timeout: 2000,
-         success: function(data) {
-            alert("Guardado Exitoso");
-         },
-         error: function(jqXHR, textStatus, errorThrown) {
-            //var $json = $.parseJSON(jqXHR.responseText);
-            alert("Guardado Fallido");
-         }
-      });
+        $.ajax({
+           method: "POST",
+           url: '/vote',
+           dataType: "json",
+           data: $data,
+           cache: false,
+           timeout: 2000,
+           success: function(data) {
+              alert("Guardado Exitoso");
+           },
+           error: function(jqXHR, textStatus, errorThrown) {
+              //var $json = $.parseJSON(jqXHR.responseText);
+              alert("Guardado Fallido");
+           }
+        });
+
+      }
+      
    }
    render() {
       if(this.state.data.length) {
@@ -64,7 +81,7 @@ class CandidateVote extends React.Component {
                         this.state.data.map((candidate) =>{
                            let fullname = `${candidate.name} ${candidate.lastname}`
                            return <div className="row">
-                           <form className="col s12" method="POST">
+                           
                                <div className="row">
                                    <div className="input-field col s6">
                                        <label for="first_name">{fullname}</label>
@@ -74,9 +91,7 @@ class CandidateVote extends React.Component {
                                        <p for="last_name">Voto de 5.0 a 10</p>
                                    </div>
                                </div>
-                               
-                               
-                           </form>
+                           
                        </div>
                         })
                        }
