@@ -6,7 +6,7 @@
   "scripts": {
     "build": "browserify app.js > public/js/appbuilded.js -t babelify",
     "buildadmin": "browserify appadmin.js > public/js/appbuildedadmin.js -t babelify",
-    "start": "NODE_PATH=. babel-node index.js --presets es2015",
+    "start": "babel-node index.js --presets es2015",
     "serve": "NODE_PATH=. babel-node index.js --presets es2015",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

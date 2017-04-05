@@ -79,19 +79,9 @@ passport.use(new FacebookStrategy({
 			username: profile._json.name.split(' ').join('.'),
 			facebookId: profile.id
 		}
-		//console.log(user);
-      
-      var query = {facebook_id: user.facebookId},
-         update = { username: user.username, facebook_id: user.facebookId, date: moment().format('YYYY-MM-DD hh:mm:ss') },
-         options = { upsert: true, new: true, setDefaultsOnInsert: true };
-      // Find the document
-      Social.findOneAndUpdate(query, update, options, function(error, result) {
-         if (error) return;
-         console.log(result);
-         return done(null, user);
-          // do something with the document
-      });
-		
+
+      console.log("FacebookStrategy");
+      return done(null, user);
 	});
   }
 ));
@@ -107,11 +97,32 @@ app.get('/auth/facebook/callback',
 		{ failureRedirect: '/'}
 	),
 	function(req, res) {
+      console.log(req.user);
 		// Successful authentication, redirect home.
-      var ipInfo = getIP(req);
+      console.log('/auth/facebook/callback');
+      let ipInfo = getIP(req);
       console.log(ipInfo);
-		console.log('/auth/facebook/callback');
-		res.redirect('/votes');
+      Social.count({public_ip: ipInfo.clientIp, vote: moment().format('YYYY-MM-DD')}, (err, result) => {
+         console.log("count: " + result);
+         if(err) {
+            return res.json();
+         }
+         if(result == 10) {
+            res.status(401).send({"login": true, "msg": "Solo se permiten maximo 10 sesiones de votacion por PC"});
+         }else {
+            let query = {facebook_id: req.user.facebookId},
+               update = { username: req.user.username, facebook_id: req.user.facebookId, public_ip: ipInfo.clientIp, date: moment().format('YYYY-MM-DD hh:mm:ss') },
+               options = { upsert: true, new: true, setDefaultsOnInsert: true };
+            // Find the document
+            Social.findOneAndUpdate(query, update, options, function(error, result) {
+               if (error) return;
+               //console.log(result);
+               res.redirect('/votes');
+                // do something with the document
+            });
+         }
+      });
+		
 	}
 );
 
