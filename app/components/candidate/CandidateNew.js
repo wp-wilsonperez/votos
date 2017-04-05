@@ -24,6 +24,7 @@ class CandidateNew extends React.Component {
          timeout: 2000,
          success: function(data) {
             alert("Guardado Exitoso");
+            window.location.hash = "#candidates"
          },
          error: function(jqXHR, textStatus, errorThrown) {
             //var $json = $.parseJSON(jqXHR.responseText);

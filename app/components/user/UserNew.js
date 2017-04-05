@@ -49,6 +49,7 @@ class UserNew extends React.Component {
          timeout: 2000,
          success: function(data) {
             alert("Guardado Exitoso");
+            window.location.hash = "#users"
          },
          error: function(jqXHR, textStatus, errorThrown) {
             //var $json = $.parseJSON(jqXHR.responseText);
