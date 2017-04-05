@@ -66,7 +66,6 @@ let localStrategy = new LocalStrategy( (username, password, done) => {
          });
       }      
    });
-   
 });
 
 passport.use(new FacebookStrategy({
@@ -123,6 +122,20 @@ let server = http.createServer(app).listen(port, () => {
 
 app.get('/', (req, res) => {
 	res.render('home');
+});
+
+app.get('/socials', authLocal, (req, res) => {
+
+   Social.find({}, (err, docs) => {
+      if(err) {
+         return res.json();
+      }
+      if(docs) {
+         res.json(docs);
+      }else {
+         res.json([]);
+      }
+   });
 });
 
 app.get('/votes', authSocial, (req, res) => {

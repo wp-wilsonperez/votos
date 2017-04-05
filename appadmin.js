@@ -15,6 +15,8 @@ import ResultQuestion from './app/components/result/ResultQuestion';
 import ResultPublic from './app/components/result/ResultPublic';
 import ResultGlobal from './app/components/result/ResultGlobal';
 
+import SocialList from './app/components/social/SocialList';
+
 import {default as Router, Route} from 'react-router';
 
 let RouterHandler = Router.RouteHandler;
@@ -59,6 +61,7 @@ let routes = <Route handler={AppRouter}>
       <Route path="user" handler={UserNew} />
       <Route path="candidates" handler={CandidateList} />
       <Route path="candidate" handler={CandidateNew} />
+      <Route path="socials" handler={SocialList} />
       <Route path="opening" handler={CandidateOpening} />
       <Route path="casual" handler={CandidateCasual} />
       <Route path="gala" handler={CandidateGala} />
