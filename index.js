@@ -6,6 +6,8 @@ import bodyParser from 'body-parser';
 import expressSession from 'express-session';
 import passport from 'passport';
 import sha1 from 'sha1';
+import moment from 'moment';
+var getIP = require('ipware')().get_ip;
 //import passport from 'passport';
 import {Strategy as FacebookStrategy} from 'passport-facebook';
 
@@ -15,6 +17,7 @@ import mongoose from 'mongoose';
 import Candidate from './app/models/candidate';
 import User from './app/models/user';
 import Vote from './app/models/vote';
+import Social from './app/models/social';
 
 mongoose.connect('mongodb://localhost/votes');
 import {Strategy as LocalStrategy} from 'passport-local';
@@ -77,8 +80,19 @@ passport.use(new FacebookStrategy({
 			username: profile._json.name.split(' ').join('.'),
 			facebookId: profile.id
 		}
-		console.log(user);
-		return done(null, user);
+		//console.log(user);
+      
+      var query = {facebook_id: user.facebookId},
+         update = { username: user.username, facebook_id: user.facebookId, date: moment().format('YYYY-MM-DD hh:mm:ss') },
+         options = { upsert: true, new: true, setDefaultsOnInsert: true };
+      // Find the document
+      Social.findOneAndUpdate(query, update, options, function(error, result) {
+         if (error) return;
+         console.log(result);
+         return done(null, user);
+          // do something with the document
+      });
+		
 	});
   }
 ));
@@ -95,6 +109,8 @@ app.get('/auth/facebook/callback',
 	),
 	function(req, res) {
 		// Successful authentication, redirect home.
+      var ipInfo = getIP(req);
+      console.log(ipInfo);
 		console.log('/auth/facebook/callback');
 		res.redirect('/votes');
 	}
@@ -291,7 +307,7 @@ app.get('/users', authLocal, (req, res) => {
 
    User.find({}, (err, docs) => {
       if(err) {
-         res.json();
+         return res.json();
       }
       if(docs) {
          res.json(docs);
@@ -325,20 +341,41 @@ app.post('/user', authLocal, (req, res) => {
 
 app.post('/candidate/vote', authSocial, (req, res) => {
 
-	let params = {
-		_id: req.body.candidate_id
-	}
-	let update = {
-		"$inc": {"votes":1}
-	};
-	Candidate.findOneAndUpdate(params, update, function (err, resp) {
-		if(err){
-			console.log(err);
-			res.status(401).send({"save": false});
-		} else {
-			res.send({"save": true, "text": "Voto exitoso"});
-		} 
-	});
+   console.log(req.user.facebookId);
+
+   let params = {
+      facebook_id: req.user.facebookId,
+      vote: { $ne: moment().format("YYYY-MM-DD") }
+   }
+   let update = {
+      vote: moment().format("YYYY-MM-DD")
+   };
+
+   Social.findOneAndUpdate(params, update, function (err, resp) {
+      console.log(resp);
+      if(err){
+         console.log(err);
+         return res.status(401).send({"save": false});
+      }
+      if(resp) {
+         params = {
+            _id: req.body.candidate_id
+         }
+         update = {
+            "$inc": {"votes":1}
+         };
+         Candidate.findOneAndUpdate(params, update, function (err2, resp2) {
+            if(err2){
+               console.log(err2);
+               res.status(401).send({"save": false});
+            } else {
+               res.send({"save": true, "text": "Voto exitoso"});
+            } 
+         });
+      }else {
+         res.status(401).send({"save": false, "text": "Solo puede realizar un voto al dia"});
+      }
+   });
 });
 
 app.get('/login', (req, res) => {

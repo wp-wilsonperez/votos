@@ -20,8 +20,8 @@ class CandidateTable extends React.Component {
             alert("Voto Exitoso");
          },
          error: function(jqXHR, textStatus, errorThrown) {
-            //var $json = $.parseJSON(jqXHR.responseText);
-            alert("Voto Fallido");
+              var $json = $.parseJSON(jqXHR.responseText);
+              alert($json.text);
          }
       });
    }
