@@ -443,6 +443,9 @@ app.get('/admin', authLocal, (req, res) => {
 	res.render('admin/admin', {user: req.user});
 });
 
+app.get('/*', (req, res) => {
+  res.redirect('/')
+});
 //middleware authenticate
 function authLocal(req, res, next) {
    if(req.isAuthenticated()) {
