@@ -97,7 +97,11 @@
                         <div class="sidebar-profile-info">
                             <a href="javascript:void(0);" class="account-settings-link">
                                 <p><%=user.username%></p>
-                                <span><%=user.role%><i class="material-icons right">arrow_drop_down</i></span>
+                                <% role = 'Administrador' %>
+                                <% if(user.role == 2) {%>
+                                    <% role = 'Juez' %>
+                                <% }%>
+                                <span><%=role%><i class="material-icons right">arrow_drop_down</i></span>
                             </a>
                         </div>
                     </div>

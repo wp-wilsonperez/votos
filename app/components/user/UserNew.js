@@ -1,20 +1,6 @@
 
 import React from 'react';
-
-var DropDown = React.createClass(
-{
-    render: function () {
-        var items = this.props.data;
-        return (
-        <select value={this.props.Selected} id={this.props.id}>
-            {
-                items.map(function (item) {
-                    return <option value={item.value }>{item.name}</option>;
-                })
-            }
-        </select>);
-    }
-});
+import InputRadio from './../common/InputRadio';
 
 class UserNew extends React.Component {
 
@@ -37,9 +23,9 @@ class UserNew extends React.Component {
           //document: $("#document").val(),
           username: $("#username").val(),
           password: $("#password").val(),
-          role: $("#role").val(),
+          role: $("#role").val()
       };
-
+      console.log($data);
       $.ajax({
          method: "POST",
          url: '/user',
@@ -58,6 +44,10 @@ class UserNew extends React.Component {
       });
    }
    render() {
+    let $inputs = [
+        {id: "test1", val: 1, show: "Administrador", name: "role", isChecked: true},
+        {id: "test2", val: 2, show: "Juez", name: "role", isChecked: false}
+      ];
       return <div className="row">
         <div className="col s12">
             <div className="page-title">Crear Usuarios</div>
@@ -65,45 +55,37 @@ class UserNew extends React.Component {
         <div className="col s12 m12 l12">
             <div className="card">
                 <div className="card-content">
-                    <span className="card-title">Datos</span><br/>
+                    <span className="card-title">Datos</span>
                     <div className="row">
                         <form className="col s12" method="POST" name="cedulaInit">
                             <div className="row">
                                 <div className="input-field col s6">
                                     <input id="name" type="text" className="validate" name="nombre" />
-                                    <label for="name" className="">Nombre</label>
+                                    <label htmlFor="name" className="">Nombre</label>
                                 </div>
                                 <div className="input-field col s6">
                                     <input id="lastname" type="text" className="validate" name="apellido" />
-                                    <label for="lastname">Apellido</label>
+                                    <label htmlFor="lastname">Apellido</label>
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="input-field col s12">
                                     <input id="username" name="cedula" type="text" className="validate" />
-                                    <label for="username">username</label>
+                                    <label htmlFor="username">username</label>
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="input-field col s12">
-                                    <label for="password" className="">Contraseña</label>
+                                    <label htmlFor="password" className="">Contraseña</label>
                                     <input id="password" type="password" className="password" name="password" />
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col s12">
-                                  <div className="select-wrapper initialized" >
-                                    <span className="caret">▼</span>
-                                    <input type="text" className="select-dropdown" readonly="true" data-activates="select-options-d52fce94-f499-7c54-0e0e-3832b38d2463" value="Administrador" />
-                                    <ul id="select-options-d52fce94-f499-7c54-0e0e-3832b38d2463" className="dropdown-content select-dropdown ">
-                                    <li className=""><span>Administrador</span></li>
-                                    <li className=""><span>Juece</span></li>
-                                    </ul>
-                                    <select id="role" className="initialized">
-                                    <option value="1">Administrador</option>
-                                    <option value="2">Juece</option>
-                                    </select>
-                                  </div>
+
+                                  
+                                  <InputRadio inputs={$inputs} ID="role" default="1"/>
+               
                                 </div>
                             </div>
                             <div className="row">
@@ -120,4 +102,5 @@ class UserNew extends React.Component {
     </div>
    }
 }
+
 export default UserNew
